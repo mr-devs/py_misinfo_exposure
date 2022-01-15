@@ -1,5 +1,5 @@
 # py_misinfo_exposure
-Calculate misinformation-exposure scores for a user based on the falsity scores of public figures the user follows.
+A Python package to calculate misinformation-exposure scores for a user based on the falsity scores of public figures they follow on Twitter.
 
 The falsity score is based on PolitiFact fact-checks of the public figures.
 
