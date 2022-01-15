@@ -1,4 +1,4 @@
-# py_misinfo_exposure
+# `py_misinfo_exposure`
 A Python package to calculate misinformation-exposure scores for a user based on the falsity scores of public figures they follow on Twitter.
 
 The falsity score is based on PolitiFact fact-checks of the public figures.
@@ -48,7 +48,7 @@ If you would like misinformation exposure scores for a large set of users, it ma
 
 > Note: How long it will take is explicitly determined by Twitter's API rate limits. For more information, you can see Twitter's API [documentation](https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-following) for the endpoint utilized by `py_misinfo_exposure`. 
 >
-> **TLDR: You can retrieve _up to_ 15,000 friends every 15 minutes.** In reality, the number of friends you can retrieve from Twitter will likely be less because rate limits are based on the _number of API calls_ made to Twitter and not the number of friends returned.
+> **TLDR: You can retrieve _up to_ 15,000 friends every 15 minutes.** In reality, the number of friends you can retrieve from Twitter in 15 minutes will likely be less because rate limits are based on the _number of API calls_ made to Twitter and not the number of friends returned.
 
 **To print update for a long-running script, you can utilize the other `PyMisinfoExposure` arguments: `verbose` and `update_on`.**
 
