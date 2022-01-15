@@ -4,7 +4,7 @@ A Python package that can be used to calculate misinformation-exposure scores fo
 The falsity score is based on PolitiFact fact-checks of the public figures.
 
 > 🚨 Note 🚨:
-> This package replicates Mohsen Mosleh's R package (https://github.com/mmosleh/minfo-exposure) which does the same thing and is based on Mosleh and Rand's paper (2021). 
+> This package replicates [Mohsen Mosleh's R package](https://github.com/mmosleh/minfo-exposure) which does the same thing and is based on Mosleh and Rand's paper (2021). 
 > - [Paper](https://psyarxiv.com/ye3pf/)
 > - [Data](https://github.com/mmosleh/minfo-exposure/tree/main/data) last retrieved on: 2021/01/15
 
