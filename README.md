@@ -50,9 +50,9 @@ If you would like misinformation exposure scores for a large set of users, it ma
 >
 > **TLDR: You can retrieve _up to_ 15,000 friends every 15 minutes.** In reality, the number of friends you can retrieve from Twitter in 15 minutes will likely be less because rate limits are based on the _number of API calls_ made to Twitter and not the number of friends returned.
 
-**To print update for a long-running script, you can utilize the other `PyMisinfoExposure` arguments: `verbose` and `update_on`.**
+**To print updates for a long-running script, you can utilize the other `PyMisinfoExposure` arguments: `verbose` and `update_on`.**
 
-For example, if you want the `PyMisinfoExposure` class to let you know when 500 users have been processed, you can initilize the class in the following way:
+For example, if you want the `PyMisinfoExposure` class to let you know every time another 500 users have been processed, you can initialize the class in the following way:
 
 ```python
 pme = PyMisinfoExposure(
