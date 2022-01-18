@@ -84,4 +84,4 @@ For a quick start, it can be run in the following way...
 python3 get_users_misinfo_exposure_scores.py --input_file data/randomusers.txt --output_file 'my_output_filename' --bearer_token $TWITTER_BEARER_TOKEN
 ```
 
-... where `$TWITTER_BEARER_TOKEN` should be replaced with you Twitter developer bearer token. 
+... where `$TWITTER_BEARER_TOKEN` should be replaced with your Twitter developer bearer token. 
