@@ -11,7 +11,7 @@ The falsity score is based on PolitiFact fact-checks of the public figures.
 
 ## Contents
 - [Quick start](#quick-start)
-- [Rate Limits and more control](#rate-limits-and-more-control)
+- [Rate limits and more control](#rate-limits-and-more-control)
 - [Example script](#example-script)
 
 
@@ -46,7 +46,7 @@ misinfo_scores, missing_users = pme.get_misinfo_exposure_score(user_test_list)
 > In the tuple above, `misinfo_scores` represents a [pandas dataframe](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) object and `missing_users` will return a set of users for whom no friends were found. This may happen, for example, if the account has been suspended or it does not exist. If there are no missing users, `missing_users` is returned as `None`.
 
 
-## Rate Limits and more control
+## Rate limits and more control
 
 `py_misinfo_exposure` uses the [`tweepy`](https://www.tweepy.org/) package under the hood to gather Twitter data and, with the Twitter bearer token that you provide, initializes a [`tweepy`](https://www.tweepy.org/) client that will automatically wait the proper amount of time when Twitter rate limits have been hit.
 
