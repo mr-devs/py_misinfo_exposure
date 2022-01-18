@@ -8,6 +8,12 @@ The falsity score is based on PolitiFact fact-checks of the public figures.
 > - [Paper](https://psyarxiv.com/ye3pf/)
 > - [Data](https://github.com/mmosleh/minfo-exposure/tree/main/data) last retrieved on: 2021/01/15
 
+## Contents
+- [[Quick start]]
+- [[Rate Limits and more control]]
+Rate Limits and more control
+
+
 ## Quick start
 
 ```python
@@ -61,3 +67,20 @@ pme = PyMisinfoExposure(
     update_on=500 # default value = 100
     )
 ```
+
+## Example script
+This repository also includes an example script called [`get_users_misinfo_exposure_scores.py`](https://github.com/mr-devs/py_misinfo_exposure/blob/main/get_users_misinfo_exposure_scores.py) that takes in a file which contains one Twitter user ID on each line and returns a CSV file containing all of those users misinformation-exposure scores. I suggest first executing the below line of code from your command line...
+
+```bash
+python3 get_users_misinfo_exposure_scores.py -h
+```
+
+...which will display what the script does and all of the command line flags that are available.
+
+For a quick start, it can be run in the following way...
+
+```bash
+python3 get_users_misinfo_exposure_scores.py --input_file data/randomusers.txt --output_file 'my_output_filename' --bearer_token $TWITTER_BEARER_TOKEN
+```
+
+... where `$TWITTER_BEARER_TOKEN` should be replaced with you Twitter developer bearer token. 
