@@ -195,6 +195,6 @@ class PyMisinfoExposure:
             warning_str += "Missing users:\n"
             for user in missing_users:
                 warning_str += f"\t- User ID: {user}\n"
-            warnings.warn(warning_str)
+            warnings.warn(message = warning_str)
 
         return misinfo_scores_df, missing_users
