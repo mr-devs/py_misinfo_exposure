@@ -11,6 +11,7 @@ which does the same thing and is based on Mosleh and Rand's paper (2021).
 
 Author: Matthew R. DeVerna (https://github.com/mr-devs)
 """
+import os
 import warnings
 from collections import defaultdict
 
@@ -20,13 +21,32 @@ import pandas as pd
 
 class PyMisinfoExposure:
     
-    def __init__(self, bearer_token: str = None, verbose = False, update_on=100):
+    def __init__(
+        self,
+        bearer_token: str = None,
+        verbose: bool = False,
+        update_on: int = 25,
+        save_friends_to_disk: bool = False,
+        output_dir: str = "py_misinfo_friend_data"
+    ):
+        # Check input types
         if bearer_token is None:
             raise ValueError("Twitter bearer token is missing.")
+        if not isinstance(verbose, bool):
+            raise ValueError("`verbose` must be of type `bool`")
+        if not isinstance(update_on, int):
+            raise ValueError("`update_on` must be of type `int`")
+        if not isinstance(save_friends_to_disk, bool):
+            raise ValueError("`save_friends_to_disk` must be of type `bool`")
+        if not isinstance(output_dir, str):
+            raise ValueError("`output_dir` must be of type `str`")
+
         self._bearer_token = bearer_token
-        self._client = None
         self._verbose = verbose
         self._update_on = update_on
+        self._save_friends_to_disk = save_friends_to_disk
+        self._client = None
+        self._output_dir = output_dir
 
         # Load falsity data.
         # Retrieved from: https://github.com/mmosleh/minfo-exposure/tree/main/data
@@ -108,22 +128,78 @@ class PyMisinfoExposure:
                 if not isinstance(uid, str):
                     out_string += f"\tProvided ID: {uid} | List index: {idx}\n"
             raise TypeError("Some user IDs are not strings..." + out_string)
-        
+
         if self._verbose:
             print(f"Beginning to pull friends for {len(user_id_list):,} users.")
             print(f"Will update on progress every {self._update_on:,} users.")
+
+        if self._save_friends_to_disk:
+            if not os.path.exists(self._output_dir):
+                os.mkdir(self._output_dir)
+            if self._verbose:
+                print(f"Friends data will be saved here: {self._output_dir}")
 
         # Gather results
         results = []
         for user_count, user in enumerate(user_id_list, start=1):
 
-            # Get friends
-            for friend in tweepy.Paginator(self._client.get_users_following, id=user, max_results=1000).flatten():
-                friend_info = tuple([user] + list(friend.values()))
-                results.append(friend_info)
+            ### Get friends data ###
+
+            # If save_friends_to_disk == True, we write these results to the disk
+            if self._save_friends_to_disk:
+                out_path = os.path.join(self._output_dir, f"{user}_data.txt")
+
+                try:
+                    if os.path.exists(out_path):
+                        if self._verbose:
+                            print(
+                                f"\t - Data for user ({user}) already exists, so we will "
+                                "skip this user. If you think this is a mistake and want to "
+                                f"gather data for this user, delete this user's file ({out_path}) and rerun."
+                            )
+                        continue
+
+                    with open(out_path, "w") as f:
+                        for friend in tweepy.Paginator(self._client.get_users_following, id=user, max_results=1000).flatten():
+                            friend_info = tuple([user] + list(friend.values()))
+                            f.write(f"{friend_info}\n")
+
+                except KeyboardInterrupt:
+                    except_string = "MANUAL ABORT!!!\n\n"
+                    except_string += f"WARNING: this file {out_path} may be incomplete!!!"
+                    raise Exception(except_string)
+
+            # Otherwise, we save the data in working memory
+            else:
+                for friend in tweepy.Paginator(self._client.get_users_following, id=user, max_results=1000).flatten():
+                    friend_info = tuple([user] + list(friend.values()))
+                    results.append(friend_info)
 
             if self._verbose and (user_count % self._update_on == 0):
-                print(f"{user_count} users proceessed...")
+                print(f"{user_count} users processed...")
+
+        return results
+
+
+    def _load_cached_friend_data(self):
+        """
+        Load all individual friend data files in self._output_dir
+
+        Returns:
+        ----------
+        - results = (list) : a list of tuples where each item is:
+            ('queried_user', 'friend_id', 'friend_name', 'friend_username')
+            Note: This will include all data for all files with any data
+        """
+
+        results = []
+        files = os.listdir(self._output_dir)
+
+        for file in files:
+            file_to_load = os.path.join(self._output_dir, file)
+            with open(file_to_load, "r") as f:
+                for line in f:
+                    results.append(eval(line))
 
         return results
 
@@ -168,6 +244,11 @@ class PyMisinfoExposure:
         # Remove duplicate IDs and get all user data
         user_id_list = list(set(user_id_list))
         results = self._get_users_data(user_id_list)
+
+        # If the below is true, `results` is currently an empty list so we load the
+        # cached data from self._output_dir and use that
+        if self._save_friends_to_disk:
+            results = self._load_cached_friend_data()
 
         # Create dictionary of the following form: {queried_user : list_of_friends}
         df_dict = defaultdict(list)
