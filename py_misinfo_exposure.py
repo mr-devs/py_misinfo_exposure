@@ -149,10 +149,25 @@ class PyMisinfoExposure:
             if self._save_friends_to_disk:
                 out_path = os.path.join(self._output_dir, f"{user}_data.txt")
 
-                with open(out_path, "w") as f:
-                    for friend in tweepy.Paginator(self._client.get_users_following, id=user, max_results=1000).flatten():
-                        friend_info = tuple([user] + list(friend.values()))
-                        f.write(f"{friend_info}\n")
+                try:
+                    if os.path.exists(out_path):
+                        if self._verbose:
+                            print(
+                                f"\t - Data for user ({user}) already exists, so we will "
+                                "skip this user. If you think this is a mistake and want to "
+                                f"gather data for this user, delete this user's file ({out_path}) and rerun."
+                            )
+                        continue
+
+                    with open(out_path, "w") as f:
+                        for friend in tweepy.Paginator(self._client.get_users_following, id=user, max_results=1000).flatten():
+                            friend_info = tuple([user] + list(friend.values()))
+                            f.write(f"{friend_info}\n")
+
+                except KeyboardInterrupt:
+                    except_string = "MANUAL ABORT!!!\n\n"
+                    except_string += f"WARNING: this file {out_path} may be incomplete!!!"
+                    raise Exception(except_string)
 
             # Otherwise, we save the data in working memory
             else:
@@ -230,7 +245,8 @@ class PyMisinfoExposure:
         user_id_list = list(set(user_id_list))
         results = self._get_users_data(user_id_list)
 
-        # If the below is true, `results` is currently an empty list
+        # If the below is true, `results` is currently an empty list so we load the
+        # cached data from self._output_dir and use that
         if self._save_friends_to_disk:
             results = self._load_cached_friend_data()
 
