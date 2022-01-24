@@ -119,7 +119,12 @@ if __name__ == "__main__":
 
     # Load and download misinformation exposure scores for a list of user ids
     user_ids_list = load_users(user_ids_file)
-    pme = PyMisinfoExposure(bearer_token=bearer_token, verbose=True, update_on=2)
+    pme = PyMisinfoExposure(
+        bearer_token=bearer_token,
+        verbose=True,
+        update_on=2,
+        save_friends_to_disk=True
+    )
     pme.tweepy_bearer_authorization()
     misinfo_scores, missing_users = pme.get_misinfo_exposure_score(user_ids_list)
 
