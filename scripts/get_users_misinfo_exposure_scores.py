@@ -4,17 +4,19 @@ user IDs.
 
 Input: a file with one user ID per line
 
-Output: a CSV file including user ID and misinformation exposure score on each line
+Output: 
+    - a CSV file including user ID and misinformation exposure score on each line
+        will be saved in the current working directory
+    - if certain user IDs cannot be found, they will be written to another file
+        called `missing_users.txt` in the current working directory
 
 Author: Matthew DeVerna
-Date: 2022/01/18
+Date: 2022/01/126
 """
-
 
 import argparse
 from datetime import datetime as dt
 
-import pandas as pd
 from argparse import RawDescriptionHelpFormatter
 from py_misinfo_exposure import PyMisinfoExposure
 
@@ -28,7 +30,7 @@ def parse_cl_args():
         description="A script for gathering a list of Twitter user IDs misinformation exposure scores."
         "\n\n"
         "Notes:"
-        "\n1. Gathered data will be saved in the current working directory"
+        "\n1. Results will be saved in the current working directory"
         "\n2. If data cannot be gathered for certain users in your list, this script will output "
         "a separate file called `missing_users.txt` with those users for further investigation "
         "\n3. The misinformation exposure score was developed by Mosleh and Rand (2021) and a working"
@@ -58,7 +60,7 @@ def parse_cl_args():
         required=False
     )
 
-    # Read parsed arguments from the command line into "args"
+    # Read parsed arguments from the command line into `args`
     args = parser.parse_args()
 
     return args
@@ -66,7 +68,10 @@ def parse_cl_args():
 
 def load_users(ids_file):
     """
-    Load all users into a list.
+    Load all user IDs into a list.
+
+        Note: The input file must be a plain text file where each line contains
+        only a single unique Twitter user ID.
 
     Parameters:
     -----------
@@ -91,7 +96,8 @@ def add_date_to_output_filename(output_filename):
     Parameters:
     ----------
     - output_filename (str, None) : if type == string, this is the file name
-        provided by the user. If type == None, then we use the default output name
+        provided by the user. If type == None, then we use the default output
+        name (see below).
 
     Returns:
     ----------
@@ -100,7 +106,7 @@ def add_date_to_output_filename(output_filename):
     """
 
     if output_filename is None:
-        output_filename = "misinfo_exposure_scores"
+        output_filename = "misinfo_exposure_scores" # Default name if nothing is provided
 
     date_suffix = dt.strftime(dt.today(), "--%Y_%m_%d__%H_%M_%S.csv")
 
@@ -121,9 +127,9 @@ if __name__ == "__main__":
     user_ids_list = load_users(user_ids_file)
     pme = PyMisinfoExposure(
         bearer_token=bearer_token,
-        verbose=True,
-        update_on=2,
-        save_friends_to_disk=True
+        verbose=True,                 # True = print updates | False = do not
+        update_on=2,                  # Print updates after this many users processed
+        save_friends_to_disk=True     # True = save intermediate friends data to disk | False = do not
     )
     pme.tweepy_bearer_authorization()
     misinfo_scores, missing_users = pme.get_misinfo_exposure_score(user_ids_list)
@@ -132,7 +138,7 @@ if __name__ == "__main__":
     misinfo_scores.to_csv(output_filename, index=False)
 
     if missing_users is not None:
-        with open("missing_users.csv", "w") as f:
+        with open("missing_users.txt", "w") as f:
             for user in missing_users:
                 f.write(f"{user}\n")
 

@@ -12,12 +12,17 @@ which does the same thing and is based on Mosleh and Rand's paper (2021).
 Author: Matthew R. DeVerna (https://github.com/mr-devs)
 """
 import os
+import pkg_resources
 import warnings
 from collections import defaultdict
 
 import tweepy
 import pandas as pd
 
+
+DATA_FILE_PATH = pkg_resources.resource_filename(
+    'py_misinfo_exposure', 'data/falsity_scores.csv'
+)
 
 class PyMisinfoExposure:
     
@@ -51,7 +56,7 @@ class PyMisinfoExposure:
         # Load falsity data.
         # Retrieved from: https://github.com/mmosleh/minfo-exposure/tree/main/data
         self.falsity_data = pd.read_csv(
-            "./data/falsity_scores.csv",
+            DATA_FILE_PATH,
             dtype = {
                 "elite_account" : str,
                 "pf_score" : float,
