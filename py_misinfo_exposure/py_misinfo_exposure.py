@@ -199,12 +199,24 @@ class PyMisinfoExposure:
 
         results = []
         files = os.listdir(self._output_dir)
+        all_elites = list(self.falsity_data["elite_id_str"])
 
         for file in files:
+            allow_non_elites = True
             file_to_load = os.path.join(self._output_dir, file)
+
             with open(file_to_load, "r") as f:
                 for line in f:
-                    results.append(eval(line))
+                    queried_user, friend_uid, name, username = eval(line)
+
+                    # The below conditional allows friends which are elites, as well as
+                    # the first non-elite friend. This allows us to tell the difference
+                    # between users who we couldn't find data for (will be returned as
+                    # 'missing_users') and users which are returned as NaN b/c they
+                    # don't match any elites.
+                    if (str(friend_uid) in all_elites) or (allow_non_elites == True):
+                        results.append( (queried_user, friend_uid, name, username) )
+                        allow_non_elites = False
 
         return results
 
