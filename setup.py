@@ -25,6 +25,10 @@ setup(
     },
     download_url="https://pypi.org/project/py_misinfo_exposure/",
     packages=["py_misinfo_exposure"],
+    package_data={
+        'py_misinfo_exposure': ['data/falsity_scores.csv']
+    },
+    include_package_data = True,
     install_requires=[
         "tweepy>=4.4.0",
         "pandas>=1.2.4"
