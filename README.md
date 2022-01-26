@@ -129,4 +129,4 @@ python3 get_users_misinfo_exposure_scores.py --input_file py_misinfo_exposure/da
 
 ... where `$TWITTER_BEARER_TOKEN` should be replaced with your Twitter developer bearer token. 
 
-> Note: The parameters for `PyMisinfoExposure` will likely need to be updated for more practical use. For example, this script provides updates after every 2 users, which is quite fast (to provide feedback for testing quickly).
+> Note: The parameters set inside of this script for `PyMisinfoExposure` will likely need to be updated for more practical use. For example, this script provides updates after every 2 users, which is quite fast (to provide feedback for testing quickly).
