@@ -9,7 +9,7 @@ with open("README.md") as f:
 
 setup(
     name="py_misinfo_exposure",
-    version="1.0",
+    version="1.1",
     description="Calculate misinformation-exposure scores for users based on "
                 "the falsity scores of public figures they follow on Twitter.",
     long_description=long_description,
