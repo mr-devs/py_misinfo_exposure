@@ -7,7 +7,7 @@ The falsity score is based on PolitiFact fact-checks of the public figures.
 > 1. This package replicates [Mohsen Mosleh's R package](https://github.com/mmosleh/minfo-exposure) which does the same thing and is based on Mosleh and Rand's paper (2021). 
 >     - [Paper](https://psyarxiv.com/ye3pf/)
 >     - [Data](https://github.com/mmosleh/minfo-exposure/tree/main/data) last retrieved on: 2021/01/15
-> 2. **This package requires you have a Twitter developer account _with access to [_Twitter's V2 API_](https://developer.twitter.com/en/docs/twitter-api)** 
+> 2. **This package requires you have a Twitter developer account with access to [_Twitter's V2 API_](https://developer.twitter.com/en/docs/twitter-api)** 
 
 
 ## Contents
