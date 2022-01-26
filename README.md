@@ -62,7 +62,7 @@ misinfo_scores, missing_users = pme.get_misinfo_exposure_score(user_test_list)
 ## Understanding the package and more control
 
 ### How the package works
-The package works by taking the list of user IDs that you provide and then asking Twitter to provide all of their friends. After this has been done, the mean "falsity" score is taken from all of the friends that a user follows that are present within the [PolitiFact data](https://github.com/mr-devs/py_misinfo_exposure/blob/main/py_misinfo_exposure/data/falsity_scores.csv).
+The package works by taking the list of user IDs that you provide and then asking Twitter to provide all of their friends on Twitter (the people that they follow). After this has been done, the mean "falsity" score is taken from all of the friends that a user follows that are present within the [PolitiFact data](https://github.com/mr-devs/py_misinfo_exposure/blob/main/py_misinfo_exposure/data/falsity_scores.csv).
 
 
 ### Rate limits
