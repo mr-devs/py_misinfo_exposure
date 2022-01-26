@@ -9,10 +9,22 @@ The falsity score is based on PolitiFact fact-checks of the public figures.
 >     - [Data](https://github.com/mmosleh/minfo-exposure/tree/main/data) last retrieved on: 2021/01/15
 > 2. **This package requires you have a Twitter developer account _with access to [_Twitter's V2 API_](https://developer.twitter.com/en/docs/twitter-api)** 
 
+
 ## Contents
+- [Installation](#installation)
 - [Quick start](#quick-start)
-- [Rate limits and more control](#rate-limits-and-more-control)
+- [Understanding the package and more control](#understanding-the-package-and-more-control)
+    - [Rate limits](#rate-limits)
+    - [Calculating scores for a large list of users](#calculating-scores-for-a-large-list-of-users)
+    - [Verbosity](#verbosity)
 - [Example script](#example-script)
+
+
+## Installation
+This package has been uploaded to the PyPi index so it can be installed via the command line via...
+```python
+pip install py_misinfo_exposure
+```
 
 
 ## Quick start
@@ -36,7 +48,8 @@ user_test_list = ["1312850357555539972", "1260526934678740993"]
 # Get misinformation exposure scores
 misinfo_scores, missing_users = pme.get_misinfo_exposure_score(user_test_list)
 
-# Which returns
+# Where `misinfo_scores` is the below pandas.DataFrame
+
                   user  misinfo_score
 0  1260526934678740993            NaN # NaN means this user does not follow any of the tracked political elites
 1  1312850357555539972       0.675167
@@ -46,9 +59,38 @@ misinfo_scores, missing_users = pme.get_misinfo_exposure_score(user_test_list)
 > In the tuple above, `misinfo_scores` represents a [pandas dataframe](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) object and `missing_users` will return a set of users for whom no friends were found. This may happen, for example, if the account has been suspended or it does not exist. If there are no missing users, `missing_users` is returned as `None`.
 
 
-## Rate limits and more control
+## Understanding the package and more control
 
+### How the package works
+The package works by taking the list of user IDs that you provide and then asking Twitter to provide all of their friends. After this has been done, the mean "falsity" score is taken from all of the friends that a user follows that are present within the [PolitiFact data](https://github.com/mr-devs/py_misinfo_exposure/blob/main/py_misinfo_exposure/data/falsity_scores.csv).
+
+
+### Rate limits
 `py_misinfo_exposure` uses the [`tweepy`](https://www.tweepy.org/) package under the hood to gather Twitter data and, with the Twitter bearer token that you provide, initializes a [`tweepy`](https://www.tweepy.org/) client that will automatically wait the proper amount of time when Twitter rate limits have been hit.
+
+
+### Calculating scores for a large list of users
+The default way that `py_misinfo_exposure` works is to download all of the friends data from Twitter and hold it in your machine's working memory. This becomes problematic when calculating scores for a large list of users because your machine may crash from holding too much data at once.
+
+To solve this problem you can simply set `save_friends_to_disk=True` when you initialize the `PyMisinfoExposure` class like so:
+
+```python
+pme = PyMisinfoExposure(
+    bearer_token=bearer,
+    save_friends_to_disk=True   # <---------- Add this to save friends data to your machine
+    )
+```
+
+Then, when you call `pme.get_misinfo_exposure_score(users)`, friends data will be downloaded into a folder within your current working directory. By default, this folder will be called `py_misinfo_friend_data`, however, you can again manually control the name of this folder by setting the `output_dir` parameter when you initialize the `PyMisinfoExposure` class in the following way.
+
+```python
+pme = PyMisinfoExposure(
+    bearer_token=bearer,
+    save_friends_to_disk=True,      # <---------- Add this to save friends data to your machine
+    output_dir='myoutputdirectory'  # <---------- Add this to save friends data into the 'myoutputdirectory' folder
+    )
+```
+
 
 ### Verbosity 
 If you would like misinformation exposure scores for a large set of users, it may take some time to retrieve all of the friends for all of the users you are interested in.
@@ -69,8 +111,9 @@ pme = PyMisinfoExposure(
     )
 ```
 
+
 ## Example script
-This repository also includes an example script called [`get_users_misinfo_exposure_scores.py`](https://github.com/mr-devs/py_misinfo_exposure/blob/main/get_users_misinfo_exposure_scores.py) that takes in a file which contains one Twitter user ID on each line and returns a CSV file containing all of those users misinformation-exposure scores. I suggest first executing the below line of code from your command line...
+This repository also includes an example script called [`get_users_misinfo_exposure_scores.py`](https://github.com/mr-devs/py_misinfo_exposure/blob/main/scripts/get_users_misinfo_exposure_scores.py) that takes in a file which contains one Twitter user ID on each line and returns a CSV file containing all of those users misinformation-exposure scores. I suggest first executing the below line of code from your command line...
 
 ```bash
 python3 get_users_misinfo_exposure_scores.py -h
@@ -81,7 +124,9 @@ python3 get_users_misinfo_exposure_scores.py -h
 For a quick start, it can be run in the following way...
 
 ```bash
-python3 get_users_misinfo_exposure_scores.py --input_file data/randomusers.txt --output_file 'my_output_filename' --bearer_token $TWITTER_BEARER_TOKEN
+python3 get_users_misinfo_exposure_scores.py --input_file py_misinfo_exposure/data/randomusers.txt --output_file 'my_output_filename' --bearer_token $TWITTER_BEARER_TOKEN
 ```
 
 ... where `$TWITTER_BEARER_TOKEN` should be replaced with your Twitter developer bearer token. 
+
+> Note: The parameters for `PyMisinfoExposure` will likely need to be updated for more practical use. For example, this script provides updates after every 2 users, which is quite fast (to provide feedback for testing quickly).
