@@ -4,9 +4,10 @@ A Python package that can be used to calculate misinformation-exposure scores fo
 The falsity score is based on PolitiFact fact-checks of the public figures.
 
 > 🚨 Notes 🚨:
-> 1. This package replicates [Mohsen Mosleh's R package](https://github.com/mmosleh/minfo-exposure) which does the same thing and is based on Mosleh and Rand's paper (2021). 
->     - [Paper](https://psyarxiv.com/ye3pf/)
+> 1. This package replicates [Mohsen Mosleh's R package](https://github.com/mmosleh/minfo-exposure) which does the same thing and is based on Mosleh and Rand's paper (2022).
+>     - [Paper](https://doi.org/10.1038/s41467-022-34769-6)
 >     - [Data](https://github.com/mmosleh/minfo-exposure/tree/main/data) last retrieved on: 2021/01/15
+>         - Note: The data in this repository is based on the preprint version of this paper ([found here](https://psyarxiv.com/ye3pf/)). See the Nature Communications paper linked-to above for access to a Rapid API tool built by the Moseleh & Rand.
 > 2. **This package requires you have a Twitter developer account with access to [_Twitter's V2 API_](https://developer.twitter.com/en/docs/twitter-api)** 
 
 
@@ -81,7 +82,8 @@ pme = PyMisinfoExposure(
     )
 ```
 
-Then, when you call `pme.get_misinfo_exposure_score(users)`, friends data will be downloaded into a folder within your current working directory. By default, this folder will be called `py_misinfo_friend_data`, however, you can again manually control the name of this folder by setting the `output_dir` parameter when you initialize the `PyMisinfoExposure` class in the following way.
+Then, when you call `pme.get_misinfo_exposure_score(users)`, friends data will be downloaded into a folder within your current working directory.
+By default, this folder will be called `py_misinfo_friend_data`, however, you can again manually control the name of this folder by setting the `output_dir` parameter when you initialize the `PyMisinfoExposure` class in the following way.
 
 ```python
 pme = PyMisinfoExposure(
