@@ -1,5 +1,7 @@
 # Important!
-This package has not been updated since Twitter made drastic changes to the cost of using their API. Please make sure that you understand how this code works before using it.
+This package has not been updated since Twitter made drastic changes to the cost of using their API.
+Please make sure that you understand how this code works before using it.
+Also, note that the rate limiting information mentioned in this README file is out of date, as Twitter made changes to this as well.
 
 # `py_misinfo_exposure`
 A Python package that can be used to calculate misinformation-exposure scores for a user based on the falsity scores of public figures they follow on Twitter.
